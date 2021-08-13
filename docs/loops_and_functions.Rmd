@@ -1,0 +1,111 @@
+---
+title: "Loops and Functions"
+author: "Scout Leonard"
+date: "8/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Part 1
+#Task 1
+
+```{r}
+weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+transects <- c("Transect A", "Transect B", "Transect C")
+
+out_matrix <- matrix(nrow = length(weekdays), ncol = length(transects))
+
+for (j in seq_along(weekdays)) {
+  for (i in seq_along(transects)) {
+    days_transects <- paste(weekdays[j], "-", transects[i])
+    out_matrix[j,i] <- days_transects
+  }
+}
+
+out_matrix
+```
+##Part 2: Functions Introduced
+#Task 2
+
+```{r}
+force <- function(m, a) {
+  f <- m*a
+  return(paste("The resulting force is", f))
+}
+
+force(m = 10, a = 10)
+```
+
+#Task 3
+
+```{r}
+
+name_column <- function(data_frame_name, number) {
+      if (number < 1)
+        warning("columns cannot be less than 1")
+      else if (number > ncol(data_frame_name)) {
+        warning("Number exceeds rows in the dataframe")
+      }
+      else (names(data_frame_name[number]))
+}
+
+name_column(data_frame_name = mtcars, number = 3)
+```
+
+# Task 4
+
+```{r}
+fish_parms <- data.frame(sci_name = c("Canos chanos", "Sphyraena barracuda", "Caranx ignobilis"),
+                         common_name = c("Milkfish", "Great barracuda", "Giant trevally"),
+                         a_est = c(0.0905, 0.0181, 0.0353),
+                         b_est = c(2.52, 3.27, 3.05))
+
+fish_weight <- function(fish_name, tot_length) {
+  name_select <- dplyr::filter(fish_parms, common_name == fish_name)
+  weight <- name_select$a_est * (tot_length^name_select$b_est)
+  return(weight)
+}
+
+fish_weight(fish_name = "Milkfish", tot_length = 30)
+
+length_vector <- seq(from = 0, to = 100, by = 1)
+milkfish_lengths <- fish_weight(fish_name = "Milkfish", tot_length = length_vector)
+```
+
+#Task 5
+
+```{r}
+wave_power <- function(wave_height, period) {
+  P <- 0.5 * wave_height^2 * period
+  return(P)
+}
+
+wave_vector <- seq(from = 0, to = 3, by = 0.2)
+wave_power(wave_height = wave_vector, period = 8)
+```
+
+# Task 6
+
+```{r}
+wave_power_2 <- function(wave_height, period, depth) {
+  if (depth > 12){
+    Ps <- 0.8 * wave_height^2 *period
+    message("You are using the shallow function")
+    return(Ps)
+  }
+  else if (depth <= 12) {
+    Pd <- 0.5 * wave_height^2 * period
+    message("you are using deep function")
+    return(Pd) 
+  }
+}
+
+wave_power_2(wave_height = 2, period = 8, depth = 6)
+```
+
